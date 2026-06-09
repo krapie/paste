@@ -1,0 +1,12 @@
+{
+  "name": "Paste",
+  "short_name": "Paste",
+  "description": "Share text instantly with expiring links",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" }
+  ],
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a",
+  "display": "standalone",
+  "start_url": "/"
+}
