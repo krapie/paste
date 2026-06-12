@@ -27,25 +27,50 @@ function PiMark({ onClick }: { onClick: () => void }) {
   );
 }
 
+function setFavicon(dark: boolean) {
+  const bg = dark ? "#fafafa" : "#0a0a0a";
+  const fg = dark ? "#0a0a0a" : "#fafafa";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="4" fill="${bg}"/><text x="16" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="500" fill="${fg}">π</text></svg>`;
+  const link = document.querySelector('link[rel="icon"][type="image/svg+xml"]') as HTMLLinkElement | null;
+  if (link) link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
 function AppShell() {
   const navigate = useNavigate();
   const [dark, setDark] = useState<boolean>(() => {
+    // v2: theme is only persisted on explicit user toggle (not auto-saved from system)
+    if (localStorage.getItem("theme-v") !== "2") {
+      localStorage.removeItem("theme");
+      localStorage.setItem("theme-v", "2");
+    }
     const saved = localStorage.getItem("theme");
     if (saved === "dark") return true;
     if (saved === "light") return false;
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
 
+  // Listen for system preference changes (only when no user override)
   useEffect(() => {
-    const html = document.documentElement;
-    if (dark) {
-      html.setAttribute("data-theme", "dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      html.setAttribute("data-theme", "light");
-      localStorage.setItem("theme", "light");
-    }
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem("theme")) setDark(e.matches);
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    setFavicon(dark);
   }, [dark]);
+
+  const handleToggle = () => {
+    setDark(d => {
+      const next = !d;
+      localStorage.setItem("theme", next ? "dark" : "light");
+      return next;
+    });
+  };
 
   return (
     <div className="app">
@@ -53,7 +78,7 @@ function AppShell() {
         <div className="header-inner">
           <PiMark onClick={() => navigate("/")} />
           <span className="header-title">paste</span>
-          <button className="theme-toggle" onClick={() => setDark(d => !d)} aria-label="Toggle theme">
+          <button className="theme-toggle" onClick={handleToggle} aria-label="Toggle theme">
             {dark ? <SunIcon /> : <MoonIcon />}
           </button>
         </div>
