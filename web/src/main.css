@@ -218,6 +218,9 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: background var(--kp-dur-base) var(--kp-ease);
 }
 
 
