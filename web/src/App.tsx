@@ -27,13 +27,6 @@ function PiMark({ onClick }: { onClick: () => void }) {
   );
 }
 
-function setFavicon(dark: boolean) {
-  const bg = dark ? "#fafafa" : "#0a0a0a";
-  const fg = dark ? "#0a0a0a" : "#fafafa";
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="4" fill="${bg}"/><text x="16" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="500" fill="${fg}">π</text></svg>`;
-  const link = document.querySelector('link[rel="icon"][type="image/svg+xml"]') as HTMLLinkElement | null;
-  if (link) link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
-}
 
 function AppShell() {
   const navigate = useNavigate();
@@ -61,7 +54,6 @@ function AppShell() {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
-    setFavicon(dark);
   }, [dark]);
 
   const handleToggle = () => {
