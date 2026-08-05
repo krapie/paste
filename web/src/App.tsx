@@ -69,7 +69,7 @@ function AppShell() {
       <header className="header">
         <div className="header-inner">
           <PiMark onClick={() => navigate("/")} />
-          <span className="header-title">paste</span>
+          <span className="header-title" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>paste</span>
           <button className="theme-toggle" onClick={handleToggle} aria-label="Toggle theme">
             {dark ? <SunIcon /> : <MoonIcon />}
           </button>
