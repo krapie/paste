@@ -31,6 +31,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID) // keeps the gateway's X-Request-Id; chi's Logger prints it (R7.2)
 	r.Use(middleware.Logger)
+	r.Use(errorLog)
 	r.Use(middleware.Recoverer)
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{
