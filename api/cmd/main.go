@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 	"github.com/krapi/paste-api/internal/handler"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -44,6 +45,7 @@ func main() {
 		MaxAge:         300,
 	}))
 
+	r.Handle("/metrics", promhttp.Handler()) // internal only: the gateway answers 404 for /metrics
 	r.Get("/health", h.Health)
 	r.Post("/pastes", h.CreatePaste)
 	r.Get("/pastes/{id}", h.GetPaste)
