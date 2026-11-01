@@ -5,7 +5,7 @@ RUN go mod download
 COPY . .
 RUN go build -o paste-api ./cmd/...
 
-FROM alpine:3.21
+FROM alpine:3.24
 RUN apk add --no-cache ca-certificates
 WORKDIR /app
 COPY --from=builder /app/paste-api .
